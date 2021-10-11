@@ -35,7 +35,6 @@ async function authenticate(req, res, next) {
       return;
     }
     req.user = user;
-    console.log(req.user);
     next();
   } catch (error) {
     res.status(401).json({
