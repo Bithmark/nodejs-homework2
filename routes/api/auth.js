@@ -6,7 +6,6 @@ const { User } = require("../../models/index.js");
 const { Conflict, NotFound, BadRequest } = require("http-errors");
 const jwt = require("jsonwebtoken");
 const authenticate = require("../../models/authenticate.js");
-// console.log(authenticate);
 const { SECRET_KEY } = process.env;
 
 router.post("/signup", async (req, res, next) => {
@@ -64,7 +63,6 @@ router.post("/login", async (req, res, next) => {
 });
 
 router.get("/logout", authenticate, async (req, res, next) => {
-  // authenticate();
   try {
     const { _id } = req.user;
     await User.findByIdAndUpdate(_id, { token: null });
@@ -76,38 +74,7 @@ router.get("/logout", authenticate, async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-  // authenticate();
-  // authenticate;
-  // console.log(authenticate);
-  // const { authorization } = req.headers;
-  // const [bearer, token] = authorization.split(" ");
-  // if (bearer !== "Bearer") {
-  //   res.status(401).json({
-  //     status: "error",
-  //     code: 401,
-  //     message: "Not authorized",
-  //   });
-  //   return;
-  // }
-  // try {
-  //   const { _id } = jwt.verify(token, SECRET_KEY);
-  //   const user = await User.findById(_id);
-  //   req.user = user;
-  //   next();
-  //   try {
-  //     const { _id } = req.user;
-  //     await User.findByIdAndUpdate(_id, { token: null });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // } catch (error) {
-  //   res.status(401).json({
-  //     status: "error",
-  //     code: 401,
-  //     message: "Not authorized",
-  //   });
-  //   return;
-  // }
 });
+
 
 module.exports = router;
