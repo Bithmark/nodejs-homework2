@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
+const path = require("path");
+const fs = require("fs/promises");
 const { joiSchema } = require("../../models/users.js");
 const { User, uploadMiddleware } = require("../../models/index.js");
 const { Conflict, NotFound, BadRequest } = require("http-errors");
@@ -82,33 +84,26 @@ router.get("/logout", authenticate, async (req, res, next) => {
   }
 });
 
+const uploadDir = path.join(__dirname, "../../", "public/avatars");
+
 router.patch(
   "/avatar",
   authenticate,
   uploadMiddleware.single("avatar"),
-  async (req, res) => {
-    const uploadDir = path.join(__dirname, "../", "public/avatars");
+  async (req, res, next) => {
+    const { path: tempStorage, originalname } = req.file;
     try {
-      const { path: tempStorage, originalname } = req.file;
       const { id } = req.user;
-
       const user = await User.findOne({ id });
-
       const [extention] = originalname.split(".").reverse();
       const newFileName = `user_new-ava_${user.id}.${extention}`;
-
       Jimp.read(tempStorage, (err, image) => {
         if (err) throw err;
-        image
-          .resize(250, 250)
-          .write(newFileName); 
+        image.resize(250, 250).write(newFileName);
       });
-
       const resultStorage = path.join(uploadDir, newFileName);
       await fs.rename(tempStorage, resultStorage);
-
       const photo = path.join("/avatars", newFileName);
-
       await User.findByIdAndUpdate(
         user.id,
         {
@@ -118,7 +113,6 @@ router.patch(
           new: true,
         }
       );
-
       res.json({
         message: "success",
         code: 200,

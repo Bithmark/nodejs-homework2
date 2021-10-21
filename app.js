@@ -2,9 +2,9 @@ const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
 
+
 const AuthRouter = require("./routes/api/auth.js");
 const OrdersRouter = require("./routes/api/orders.js");
-// const avatarsRouter = require("./routes/api/avatars.js");
 
 const app = express();
 
@@ -17,7 +17,7 @@ app.use(express.static("public"));
 
 app.use("/api/users", AuthRouter);
 app.use("/api/orders", OrdersRouter);
-// app.use("/api/avatars", avatarsRouter);
+
 
 app.use((req, res) => {
   res.status(404).json({
