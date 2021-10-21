@@ -105,7 +105,7 @@ router.patch(
       await fs.rename(tempStorage, resultStorage);
       const photo = path.join("/avatars", newFileName);
       await User.findByIdAndUpdate(
-        user.id,
+        id,
         {
           avatarURL: photo,
         },
