@@ -58,10 +58,11 @@ router.post("/signup", async (req, res, next) => {
   }
 });
 
-router.get("/verify/:verificationToken", async (req, res) => {
+router.get("/verify/:verifyToken", async (req, res) => {
   try {
     const { verifyToken } = req.params;
     const user = User.findOne({ verifyToken });
+    console.log(user)
     if (!user) {
       throw new NotFound("User not found");
     }
