@@ -61,8 +61,7 @@ router.post("/signup", async (req, res, next) => {
 router.get("/verify/:verifyToken", async (req, res) => {
   try {
     const { verifyToken } = req.params;
-    const user = User.findOne({ verifyToken });
-    console.log(user)
+    const user = await User.findOne({ verifyToken });
     if (!user) {
       throw new NotFound("User not found");
     }
